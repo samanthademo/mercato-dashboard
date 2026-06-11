@@ -63,6 +63,19 @@
   .bv{font-weight:700;text-align:right;white-space:nowrap}
   .bv.na{font-weight:500;color:var(--muted-2)}
 
+  .nrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #EEF1ED}
+  .nrow:last-child{border-bottom:none}
+  .nlbl{font-size:14px;font-weight:500}
+  .nright{display:flex;align-items:baseline;gap:12px}
+  .nval{font-size:19px;font-weight:700}
+  .nval.bad{color:var(--coral)}
+  .nval.good{color:var(--accent)}
+  .nval.na{color:var(--muted-2);font-size:15px;font-weight:500}
+  .ngoal{font-size:12px;color:var(--muted-2);white-space:nowrap}
+  .pill{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px}
+  .pill.bad{background:#F6E0DB;color:#A8432F}
+  .pill.good{background:#D8EEE4;color:#1F6B4E}
+
   footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted);line-height:1.6}
 
   @media(max-width:1040px){.kpis{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.kpi .name{white-space:normal}}
@@ -187,6 +200,16 @@ function bars(id,rows,{isRate=false,illu=false,axisMax=0,goal=0,lowerBetter=fals
       <span class="bv ${na?'na':''}">${vtxt}</span></div>`;}).join("");
 }
 
+function rateList(id,rows,{goal=0,lowerBetter=true,gtxt=""}={}){
+  const el=document.getElementById(id);
+  el.innerHTML=rows.map(r=>{
+    const o=r[2]||{}; const na=(r[1]===null||r[1]===undefined||o.na);
+    if(na) return `<div class="nrow"><span class="nlbl">${r[0]}</span><span class="nright"><span class="nval na">${o.naText||"\u2013"}</span></span></div>`;
+    const over=lowerBetter?r[1]>goal:r[1]<goal; const cls=over?"bad":"good"; const pill=over?"over":"under";
+    return `<div class="nrow"><span class="nlbl">${r[0]}</span><span class="nright"><span class="nval ${cls}">${fmtP(r[1])}</span><span class="ngoal">${gtxt}</span><span class="pill ${cls}">${pill}</span></span></div>`;
+  }).join("");
+}
+
 col("ref_q",["Q2 '25","Q3 '25","Q4 '25","Q1 '26","Q2 '26 QTD"],[260,431,2615,4900,6562]);
 bars("ref_scn",[
   ["SIPPS",2659],["ModifyHealth",1130],["HVCC",39],["SOMOS",444],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
@@ -203,14 +226,14 @@ bars("serv_scn",[
 ]);
 bars("serv_type",[["Voucher credit",4078],["Box",823]]);
 bars("serv_partner",[["Morrissey Market",2100],["EA Fresh",1500],["Misfits Market",900],["Performance Kitchen",520]],{illu:true});
-bars("canc_scn",[
+rateList("canc_scn",[
   ["SIPPS",3.9],["ModifyHealth",5.4],["HVCC",6.2],["SOMOS",4.5],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
-],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
-bars("canc_type",[["Box",6.5],["Voucher credit",4.2]],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
-bars("canc_partner",[["Morrissey Market",6.0],["EA Fresh",4.5],["Misfits Market",5.2],["Performance Kitchen",3.8]],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
-bars("issue_scn",[
+],{goal:3,lowerBetter:true,gtxt:"goal &lt;3%"});
+rateList("canc_type",[["Box",6.5],["Voucher credit",4.2]],{goal:3,lowerBetter:true,gtxt:"goal &lt;3%"});
+rateList("canc_partner",[["Morrissey Market",6.0],["EA Fresh",4.5],["Misfits Market",5.2],["Performance Kitchen",3.8]],{goal:3,lowerBetter:true,gtxt:"goal &lt;3%"});
+rateList("issue_scn",[
   ["SIPPS",1.4],["ModifyHealth",1.6],["HVCC",1.8],["SOMOS",1.1],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
-],{isRate:true,illu:true,axisMax:3,goal:1.5,lowerBetter:true});
+],{goal:1.5,lowerBetter:true,gtxt:"goal &lt;1.5%"});
 </script>
 </body>
 </html>
