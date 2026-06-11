@@ -56,11 +56,12 @@
   .bigpill.bad{background:#F6E0DB;color:#A8432F}
   .bigpill.good{background:#D8EEE4;color:#1F6B4E}
 
-  .donutwrap{position:relative;width:170px;height:170px;margin:4px auto 2px}
+  .donutrow{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 0 4px}
+  .donutwrap{position:relative;width:150px;height:150px;flex:0 0 auto}
   .donutctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-  .donutctr .dn{font-size:30px;font-weight:700;line-height:1;color:var(--coral)}
+  .donutctr .dn{font-size:28px;font-weight:700;line-height:1;color:var(--coral)}
   .donutctr .dl{font-size:12px;color:var(--muted);margin-top:3px}
-  .donutgoal{text-align:center;font-size:13px;color:var(--muted);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+  .donutgoal{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:14px;color:var(--muted)}
 
   .qstrip{margin-top:auto;padding-top:16px;border-top:1px solid #EEF1ED}
   .qstrip .qlab{font-size:11.5px;color:#A8ADA3;font-style:italic;margin-bottom:8px}
@@ -124,7 +125,7 @@
   <section>
     <div class="sec-head"><h3>2 · Referral Conversion Rate</h3></div>
     <div class="grid g2">
-      <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="donutwrap"><canvas id="conv_donut"></canvas><div class="donutctr"><div class="dn">82.8%</div><div class="dl">converted</div></div></div><div class="donutgoal"><span>Goal 85%</span><span class="bigpill bad">2.2 under</span></div><div class="qstrip"><div class="qlab">Recent quarters · illustrative</div><div class="qrow"><span>Q4 '25 <b>&ndash;</b></span><span>Q1 '26 <b>81%</b></span><span>Q2 '26 <b>82.8%</b></span></div></div></div></div>
+      <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="donutrow"><div class="donutwrap"><canvas id="conv_donut"></canvas><div class="donutctr"><div class="dn">82.8%</div><div class="dl">converted</div></div></div><div class="donutgoal"><span>Goal 85%</span><span class="bigpill bad">2.2 under</span></div></div><div class="qstrip"><div class="qlab">Recent quarters · illustrative</div><div class="qrow"><span>Q4 '25 <b>&ndash;</b></span><span>Q1 '26 <b>81%</b></span><span>Q2 '26 <b>82.8%</b></span></div></div></div></div>
       <div class="panel"><h4>By SCN <span class="per">Q2 '26 · QTD</span></h4><div class="chartbox" id="conv_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
     </div>
