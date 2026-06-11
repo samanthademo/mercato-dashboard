@@ -51,6 +51,13 @@
   .big.over{color:var(--coral)}
   .bigsub{font-size:14px;color:var(--muted);margin-top:6px}
 
+  .gbar{margin-top:auto;padding-top:24px;position:relative}
+  .gtrack{position:relative;height:14px;background:#EAF0EC;border-radius:3px}
+  .gfill{height:100%;border-radius:3px;background:var(--accent)}
+  .gfill.bad{background:var(--coral)}
+  .gmark{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--muted-2)}
+  .gtick{position:absolute;font-size:11.5px;color:var(--muted-2);transform:translateX(-50%);margin-top:7px;white-space:nowrap}
+
   .bi{display:grid;grid-template-columns:var(--lblw,140px) 1fr 54px;align-items:center;gap:12px;min-height:21px;margin-bottom:9px}
   .bi.sub{padding-left:24px}
   .bl{font-weight:500;white-space:nowrap}
@@ -107,9 +114,9 @@
   </section>
 
   <section>
-    <div class="sec-head"><h3>2 · Referral Conversion Rate — 14 Days</h3></div>
+    <div class="sec-head"><h3>2 · Referral Conversion Rate</h3></div>
     <div class="grid g2">
-      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big">82.8%</div><div class="bigsub">vs 85% goal</div></div></div>
+      <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="big">82.8%</div><div class="bigsub">vs 85% goal</div><div class="gbar" id="gb_conv"></div></div></div>
       <div class="panel"><h4>By SCN</h4><div class="chartbox" id="conv_scn"></div></div>
     </div>
   </section>
@@ -130,7 +137,7 @@
   <section>
     <div class="sec-head"><h3>4 · Member Cancel Rate</h3></div>
     <div class="grid g2 row">
-      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">4.8%</div><div class="bigsub">vs under-3% goal</div></div></div>
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">4.8%</div><div class="bigsub">vs under-3% goal</div><div class="gbar" id="gb_canc"></div></div></div>
       <div class="panel"><h4>By SCN</h4><div class="chartbox" id="canc_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
     </div>
@@ -145,7 +152,7 @@
   <section>
     <div class="sec-head"><h3>5 · Issue Rate</h3></div>
     <div class="grid g2">
-      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">1.53%</div><div class="bigsub">vs under-1.5% goal</div></div></div>
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">1.53%</div><div class="bigsub">vs under-1.5% goal</div><div class="gbar" id="gb_issue"></div></div></div>
       <div class="panel"><h4>By SCN</h4><div class="chartbox" id="issue_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
     </div>
@@ -210,6 +217,15 @@ function rateList(id,rows,{goal=0,lowerBetter=true,gtxt=""}={}){
   }).join("");
 }
 
+function goalBar(id,{actual,goal,axisMax,lowerBetter,ticktxt}){
+  const fill=Math.min(actual/axisMax*100,100); const gp=goal/axisMax*100;
+  const miss=lowerBetter?actual>goal:actual<goal;
+  document.getElementById(id).innerHTML=
+    `<div class="gtrack"><div class="gfill ${miss?'bad':''}" style="width:${fill.toFixed(1)}%"></div>`+
+    `<div class="gmark" style="left:${gp.toFixed(1)}%"></div></div>`+
+    `<div class="gtick" style="left:${gp.toFixed(1)}%">goal ${ticktxt}</div>`;
+}
+
 col("ref_q",["Q2 '25","Q3 '25","Q4 '25","Q1 '26","Q2 '26 QTD"],[260,431,2615,4900,6562]);
 bars("ref_scn",[
   ["SIPPS",2659],["ModifyHealth",1130],["HVCC",39],["SOMOS",444],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
@@ -234,6 +250,10 @@ rateList("canc_partner",[["Morrissey Market",6.0],["EA Fresh",4.5],["Misfits Mar
 rateList("issue_scn",[
   ["SIPPS",1.4],["ModifyHealth",1.6],["HVCC",1.8],["SOMOS",1.1],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
 ],{goal:1.5,lowerBetter:true,gtxt:"goal &lt;1.5%"});
+
+goalBar("gb_conv",{actual:82.8,goal:85,axisMax:100,lowerBetter:false,ticktxt:"85%"});
+goalBar("gb_canc",{actual:4.8,goal:3,axisMax:8,lowerBetter:true,ticktxt:"3%"});
+goalBar("gb_issue",{actual:1.53,goal:1.5,axisMax:3,lowerBetter:true,ticktxt:"1.5%"});
 </script>
 </body>
 </html>
