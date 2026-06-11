@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercato OKR Dashboard</title>
+<style>
+  :root{
+    --bg:#F2F5F1; --panel:#FFFFFF; --ink:#22302A; --head:#1B5E43; --muted:#5F6A62; --muted-2:#79837A;
+    --accent:#2F8F6B; --accent-soft:#BFE0D4; --coral:#C2543C; --illus:#AEB7AF;
+    --line:#D7DDD6;
+    --display:Georgia,'Times New Roman',serif; --body:'Segoe UI',-apple-system,system-ui,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;padding-bottom:56px;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+
+  header{border-bottom:1px solid var(--line)}
+  .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:18px 0 16px}
+  h1{font-family:var(--display);font-size:30px;font-weight:700;color:var(--head);line-height:1;letter-spacing:-.01em}
+  .asof{font-size:13.5px;color:var(--muted)}
+
+  .obj{display:flex;align-items:center;gap:11px;margin-top:24px}
+  .obj .badge{background:var(--accent);color:#fff;font-weight:700;font-size:12.5px;padding:3px 8px;border-radius:5px}
+  .obj h2{font-family:var(--body);font-size:17px;font-weight:600;color:var(--ink)}
+
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;
+    display:flex;flex-direction:column;gap:6px;min-height:138px}
+  .kpi .kr{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--accent)}
+  .kpi .name{font-size:12.5px;font-weight:600;white-space:nowrap}
+  .kpi .val{font-size:29px;font-weight:700;line-height:1}
+  .kpi .foot{font-size:12.5px;color:var(--muted);margin-top:auto;display:flex;gap:8px;flex-wrap:nowrap;align-items:baseline}
+  .kpi .var{font-weight:700;white-space:nowrap}
+  .var.neg{color:var(--coral)}
+
+  section{margin-top:32px}
+  .sec-head{border-bottom:2px solid var(--head);padding-bottom:8px;margin-bottom:16px}
+  .sec-head h3{font-family:var(--display);font-size:19px;font-weight:700;color:var(--head)}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:1fr 1fr}
+  .row+.row{margin-top:18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;flex-direction:column}
+  .panel h4{font-size:16px;font-weight:700;margin-bottom:16px}
+  .chartbox{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .chartbox:has(.big){justify-content:flex-start}
+  .note{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45}
+
+  .big{font-size:46px;font-weight:700;line-height:1;color:var(--head)}
+  .big.over{color:var(--coral)}
+  .bigsub{font-size:14px;color:var(--muted);margin-top:6px}
+
+  .bi{display:grid;grid-template-columns:var(--lblw,140px) 1fr 54px;align-items:center;gap:12px;min-height:21px;margin-bottom:9px}
+  .bi.sub{padding-left:24px}
+  .bl{font-weight:500;white-space:nowrap}
+  .bi.sub .bl{font-weight:400;color:var(--muted)}
+  .lane{position:relative;height:13px;display:flex;align-items:center}
+  .gl{position:absolute;top:-3px;bottom:-3px;border-left:1.5px dashed var(--muted-2)}
+  .bf{height:13px;background:var(--accent);border-radius:3px}
+  .bf.illu{background:var(--illus)}
+  .bf.bad{background:var(--coral)}
+  .bv{font-weight:700;text-align:right;white-space:nowrap}
+  .bv.na{font-weight:500;color:var(--muted-2)}
+
+  footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted);line-height:1.6}
+
+  @media(max-width:1040px){.kpis{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.kpi .name{white-space:normal}}
+  @media(max-width:560px){.kpis{grid-template-columns:1fr}.wrap{padding:0 18px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <h1>Mercato OKR Dashboard</h1>
+      <div class="asof">Q2 '26 · quarter-to-date</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="obj"><span class="badge">O1</span><h2>Maximize New York 1115 Medicaid Waiver Market Share</h2></div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <div class="sec-head"><h3>1 · Referrals Received</h3></div>
+    <div class="grid g2">
+      <div class="panel"><h4>Blended — by Quarter</h4><div class="chartbox" id="ref_q"></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="ref_scn"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>2 · Referral Conversion Rate — 14 Days</h3></div>
+    <div class="grid g2">
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big">82.8%</div><div class="bigsub">vs 85% goal</div></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="conv_scn"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>3 · Members Served</h3></div>
+    <div class="grid g2 row">
+      <div class="panel"><h4>Blended — by Quarter</h4><div class="chartbox" id="serv_q"></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="serv_scn"></div></div>
+    </div>
+    <div class="grid g2 row">
+      <div class="panel"><h4>By Fulfillment Type</h4><div class="chartbox" id="serv_type"></div></div>
+      <div class="panel"><h4>By Fulfillment Partner</h4><div class="chartbox" id="serv_partner"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>4 · Member Cancel Rate</h3></div>
+    <div class="grid g2 row">
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">4.8%</div><div class="bigsub">vs under-3% goal</div></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="canc_scn"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
+    </div>
+    <div class="grid g2 row">
+      <div class="panel"><h4>By Fulfillment Type</h4><div class="chartbox" id="canc_type"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
+      <div class="panel"><h4>By Fulfillment Partner</h4><div class="chartbox" id="canc_partner"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>5 · Issue Rate</h3></div>
+    <div class="grid g2">
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">1.53%</div><div class="bigsub">vs under-1.5% goal</div></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="issue_scn"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
+    </div>
+  </section>
+
+  <footer>Source: Q2 OKR tab + Teana referral / conversion / cancellation trackers, through Jun 1 2026. Dashed line shows the goal. Red bars are missing the goal; green bars are hitting it. Illustrative panels are labeled, pending live data.</footer>
+</div>
+
+<script>
+const fmtN=n=>Math.round(n).toLocaleString("en-US");
+const fmtP=n=>n.toFixed(1)+"%";
+
+const KR=[
+  {kr:"KR1",name:"New case referrals (3.3 & 3.4)",val:"6,562",goal:"Goal 7,800",v:"-16%"},
+  {kr:"KR2",name:"Conversion within 14 days",val:"82.8%",goal:"Goal 85%",v:"-3%"},
+  {kr:"KR3",name:"Member issue rate",val:"1.53%",goal:"Goal under 1.5%",v:"-2%"},
+  {kr:"KR4",name:"Member cancel rate (3.3 & 3.4)",val:"4.8%",goal:"Goal under 3%",v:"-60%"},
+  {kr:"",name:"Members served (active)",val:"11,577",goal:"Q2 to date",v:""},
+];
+document.getElementById("kpis").innerHTML=KR.map(k=>`<div class="kpi">
+  <span class="kr">${k.kr||'&nbsp;'}</span><span class="name">${k.name}</span><span class="val">${k.val}</span>
+  <span class="foot"><span>${k.goal}</span>${k.v?`<span class="var neg">${k.v}</span>`:''}</span></div>`).join("");
+
+function col(id,labels,vals){
+  const W=560,H=216,padL=14,padR=14,padT=26,padB=30;
+  const max=Math.max(...vals)*1.16||1; const bw=(W-padL-padR)/vals.length; const y=v=>padT+(H-padT-padB)*(1-v/max);
+  let s="";
+  vals.forEach((v,i)=>{const last=i===vals.length-1,bx=bw*i+bw*0.26+padL,w=bw*0.48,by=y(v),h=(H-padB)-by;
+    s+=`<rect x="${bx}" y="${by}" width="${w}" height="${Math.max(h,0)}" rx="3" fill="${last?'var(--accent)':'var(--accent-soft)'}"/>`;
+    s+=`<text x="${bx+w/2}" y="${by-8}" font-size="14.5" fill="var(--ink)" font-weight="700" text-anchor="middle">${fmtN(v)}</text>`;
+    s+=`<text x="${bx+w/2}" y="${H-9}" font-size="13" fill="${last?'var(--ink)':'var(--muted)'}" ${last?'font-weight="700"':''} text-anchor="middle">${labels[i]}</text>`;});
+  document.getElementById(id).innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="font-family:var(--body)"><line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--line)"/>${s}</svg>`;
+}
+
+function bars(id,rows,{isRate=false,illu=false,axisMax=0,goal=0,lowerBetter=false}={}){
+  const nums=rows.map(r=>typeof r[1]==="number"?r[1]:0); const max=Math.max(...nums)||1;
+  const scale=isRate?(axisMax||100):max;
+  const el=document.getElementById(id);
+  const lblw=Math.min(Math.max(...rows.map(r=>{const o=r[2]||{};return r[0].length*7.6+(o.sub?24:0);})),200)+8;
+  el.style.setProperty("--lblw",lblw.toFixed(0)+"px");
+  const gl=goal?`<span class="gl" style="left:${(goal/scale*100).toFixed(1)}%"></span>`:"";
+  el.innerHTML=rows.map(r=>{
+    const o=r[2]||{}; const na=(r[1]===null||r[1]===undefined||o.na); const zero=(r[1]===0);
+    const ill=o.illu||illu; const sub=o.sub;
+    const vtxt=na?(o.naText||"\u2013"):(isRate?fmtP(r[1]):fmtN(r[1]));
+    const w=(na||zero)?0:(isRate?Math.min(r[1]/scale*100,100):Math.max(r[1]/max*100,1.2));
+    let bcls=ill?"illu":"";
+    if(isRate&&goal&&!na&&!zero){ bcls=(lowerBetter?r[1]>goal:r[1]<goal)?"bad":""; }
+    return `<div class="bi ${sub?'sub':''}">
+      <span class="bl">${r[0]}</span>
+      <span class="lane">${gl}${(na||zero)?'':`<span class="bf ${bcls}" style="width:${w.toFixed(1)}%"></span>`}</span>
+      <span class="bv ${na?'na':''}">${vtxt}</span></div>`;}).join("");
+}
+
+col("ref_q",["Q2 '25","Q3 '25","Q4 '25","Q1 '26","Q2 '26 QTD"],[260,431,2615,4900,6562]);
+bars("ref_scn",[
+  ["SIPPS",2659],["ModifyHealth",1130],["HVCC",39],["SOMOS",444],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
+]);
+bars("conv_scn",[
+  ["SIPPS",87.0],["ModifyHealth",85.0],["HVCC",92.3],["SOMOS",100.0],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
+],{isRate:true,goal:85});
+col("serv_q",["Q3 '25","Q4 '25","Q1 '26","Q2 '26"],[616,3158,7711,11577]);
+bars("serv_scn",[
+  ["SIPPS",5267],
+  ["ModifyHealth",5778],
+  ["HA",4301,{sub:true}],["SOMOS",694,{sub:true}],["HVCC",389,{sub:true}],["FLIPA",380,{sub:true}],["PHS",11,{sub:true}],["HEALI",3,{sub:true}],
+  ["HVCC",149],["SOMOS",382],["CDChoices",1],["ACT Care",null,{na:true}]
+]);
+bars("serv_type",[["Voucher credit",4078],["Box",823]]);
+bars("serv_partner",[["Morrissey Market",2100],["EA Fresh",1500],["Misfits Market",900],["Performance Kitchen",520]],{illu:true});
+bars("canc_scn",[
+  ["SIPPS",3.9],["ModifyHealth",5.4],["HVCC",6.2],["SOMOS",4.5],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
+],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
+bars("canc_type",[["Box",6.5],["Voucher credit",4.2]],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
+bars("canc_partner",[["Morrissey Market",6.0],["EA Fresh",4.5],["Misfits Market",5.2],["Performance Kitchen",3.8]],{isRate:true,illu:true,axisMax:8,goal:3,lowerBetter:true});
+bars("issue_scn",[
+  ["SIPPS",1.4],["ModifyHealth",1.6],["HVCC",1.8],["SOMOS",1.1],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
+],{isRate:true,illu:true,axisMax:3,goal:1.5,lowerBetter:true});
+</script>
+</body>
+</html>
