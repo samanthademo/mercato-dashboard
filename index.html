@@ -44,19 +44,19 @@
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;display:flex;flex-direction:column}
   .panel h4{font-size:16px;font-weight:700;margin-bottom:16px}
   .chartbox{flex:1;display:flex;flex-direction:column;justify-content:center}
-  .chartbox:has(.big){justify-content:flex-start}
+  .chartbox:has(.big){justify-content:center}
   .note{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45}
 
   .big{font-size:46px;font-weight:700;line-height:1;color:var(--head)}
   .big.over{color:var(--coral)}
   .bigsub{font-size:14px;color:var(--muted);margin-top:6px}
 
-  .gbar{margin-top:auto;padding-top:24px;position:relative}
+  .gbar{margin-top:22px;padding-bottom:22px;position:relative}
   .gtrack{position:relative;height:14px;background:#EAF0EC;border-radius:3px}
   .gfill{height:100%;border-radius:3px;background:var(--accent)}
   .gfill.bad{background:var(--coral)}
   .gmark{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--muted-2)}
-  .gtick{position:absolute;font-size:11.5px;color:var(--muted-2);transform:translateX(-50%);margin-top:7px;white-space:nowrap}
+  .gtick{position:absolute;top:20px;font-size:11.5px;color:var(--muted-2);transform:translateX(-50%);white-space:nowrap}
 
   .bi{display:grid;grid-template-columns:var(--lblw,140px) 1fr 54px;align-items:center;gap:12px;min-height:21px;margin-bottom:9px}
   .bi.sub{padding-left:24px}
@@ -116,8 +116,9 @@
   <section>
     <div class="sec-head"><h3>2 · Referral Conversion Rate</h3></div>
     <div class="grid g2">
-      <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="big">82.8%</div><div class="bigsub">vs 85% goal</div><div class="gbar" id="gb_conv"></div></div></div>
-      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="conv_scn"></div></div>
+      <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="big">82.8%</div><div class="bigsub">Goal 85%</div><div class="gbar" id="gb_conv"></div></div></div>
+      <div class="panel"><h4>By SCN</h4><div class="chartbox" id="conv_scn"></div>
+        <div class="note">Illustrative — pending live data.</div></div>
     </div>
   </section>
 
@@ -137,7 +138,7 @@
   <section>
     <div class="sec-head"><h3>4 · Member Cancel Rate</h3></div>
     <div class="grid g2 row">
-      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">4.8%</div><div class="bigsub">vs under-3% goal</div><div class="gbar" id="gb_canc"></div></div></div>
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">4.8%</div><div class="bigsub">Goal under 3%</div><div class="gbar" id="gb_canc"></div></div></div>
       <div class="panel"><h4>By SCN</h4><div class="chartbox" id="canc_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
     </div>
@@ -152,7 +153,7 @@
   <section>
     <div class="sec-head"><h3>5 · Issue Rate</h3></div>
     <div class="grid g2">
-      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">1.53%</div><div class="bigsub">vs under-1.5% goal</div><div class="gbar" id="gb_issue"></div></div></div>
+      <div class="panel"><h4>Blended</h4><div class="chartbox"><div class="big over">1.53%</div><div class="bigsub">Goal under 1.5%</div><div class="gbar" id="gb_issue"></div></div></div>
       <div class="panel"><h4>By SCN</h4><div class="chartbox" id="issue_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
     </div>
@@ -217,13 +218,13 @@ function rateList(id,rows,{goal=0,lowerBetter=true,gtxt=""}={}){
   }).join("");
 }
 
-function goalBar(id,{actual,goal,axisMax,lowerBetter,ticktxt}){
+function goalBar(id,{actual,goal,axisMax,lowerBetter}){
   const fill=Math.min(actual/axisMax*100,100); const gp=goal/axisMax*100;
   const miss=lowerBetter?actual>goal:actual<goal;
   document.getElementById(id).innerHTML=
     `<div class="gtrack"><div class="gfill ${miss?'bad':''}" style="width:${fill.toFixed(1)}%"></div>`+
     `<div class="gmark" style="left:${gp.toFixed(1)}%"></div></div>`+
-    `<div class="gtick" style="left:${gp.toFixed(1)}%">goal ${ticktxt}</div>`;
+    `<div class="gtick" style="left:${gp.toFixed(1)}%">goal</div>`;
 }
 
 col("ref_q",["Q2 '25","Q3 '25","Q4 '25","Q1 '26","Q2 '26 QTD"],[260,431,2615,4900,6562]);
@@ -232,7 +233,7 @@ bars("ref_scn",[
 ]);
 bars("conv_scn",[
   ["SIPPS",87.0],["ModifyHealth",85.0],["HVCC",92.3],["SOMOS",100.0],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
-],{isRate:true,goal:85});
+],{isRate:true,goal:85,illu:true});
 col("serv_q",["Q3 '25","Q4 '25","Q1 '26","Q2 '26"],[616,3158,7711,11577]);
 bars("serv_scn",[
   ["SIPPS",5267],
@@ -251,9 +252,9 @@ rateList("issue_scn",[
   ["SIPPS",1.4],["ModifyHealth",1.6],["HVCC",1.8],["SOMOS",1.1],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
 ],{goal:1.5,lowerBetter:true,gtxt:"goal &lt;1.5%"});
 
-goalBar("gb_conv",{actual:82.8,goal:85,axisMax:100,lowerBetter:false,ticktxt:"85%"});
-goalBar("gb_canc",{actual:4.8,goal:3,axisMax:8,lowerBetter:true,ticktxt:"3%"});
-goalBar("gb_issue",{actual:1.53,goal:1.5,axisMax:3,lowerBetter:true,ticktxt:"1.5%"});
+goalBar("gb_conv",{actual:82.8,goal:85,axisMax:100,lowerBetter:false});
+goalBar("gb_canc",{actual:4.8,goal:3,axisMax:8,lowerBetter:true});
+goalBar("gb_issue",{actual:1.53,goal:1.5,axisMax:3,lowerBetter:true});
 </script>
 </body>
 </html>
