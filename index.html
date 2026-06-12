@@ -64,6 +64,16 @@
   .donutgoal{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:14px;color:var(--muted)}
 
   .qstrip{margin-top:auto;padding-top:16px;border-top:1px solid #EEF1ED}
+  .tatsub{font-size:13px;color:var(--muted);margin:-8px 0 14px;line-height:1.45;max-width:760px}
+  .tatrow{display:grid;grid-template-columns:190px 64px 1fr;align-items:center;gap:16px;padding:9px 0;border-bottom:1px solid #EEF1ED}
+  .tatrow:last-child{border-bottom:none}
+  .tatrow .tlbl{font-size:14px;font-weight:500}
+  .tatrow .tday{font-size:15px;font-weight:700}
+  .tatbar{display:flex;align-items:center;position:relative}
+  .tatbar span.tv{height:22px;background:var(--accent);border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding:0 9px;color:#fff;font-size:11.5px;font-weight:700;min-width:38px;white-space:nowrap}
+  .tatwin{position:absolute;top:-5px;bottom:-5px;border-left:1.5px dashed var(--muted-2);z-index:2}
+  .tatnote{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45;max-width:760px}
+  .tatnote .win{display:inline-block;width:18px;border-top:1.5px dashed var(--muted-2);vertical-align:middle;margin:0 2px}
   .qstrip .qlab{font-size:11.5px;color:#A8ADA3;font-style:italic;margin-bottom:8px}
   .qstrip .qrow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
   .qstrip .qrow b{font-weight:700;color:var(--ink)}
@@ -128,6 +138,12 @@
       <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="donutrow"><div class="donutwrap"><canvas id="conv_donut"></canvas><div class="donutctr"><div class="dn">82.8%</div><div class="dl">converted</div></div></div><div class="donutgoal"><span>Goal 85%</span><span class="bigpill bad">2.2 under</span></div></div><div class="qstrip"><div class="qlab">Recent quarters · illustrative</div><div class="qrow"><span>Q4 '25 <b>&ndash;</b></span><span>Q1 '26 <b>81%</b></span><span>Q2 '26 <b>82.8%</b></span></div></div></div></div>
       <div class="panel"><h4>By SCN <span class="per">Q2 '26 · QTD</span></h4><div class="chartbox" id="conv_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
+    </div>
+    <div class="grid row">
+      <div class="panel"><h4>Turnaround Time (TAT) Distribution</h4>
+        <div class="tatsub">Days from Case Created to Converted Referral Date, positive values only. The window should cover the tail — where conversions stop arriving — not just the average.</div>
+        <div id="tat_dist"></div>
+      </div>
     </div>
   </section>
 
@@ -251,6 +267,19 @@ rateList("canc_partner",[["Morrissey Market",6.0],["EA Fresh",4.5],["Misfits Mar
 rateList("issue_scn",[
   ["SIPPS",1.4],["ModifyHealth",1.6],["HVCC",1.8],["SOMOS",1.1],["CDChoices",null,{na:true}],["ACT Care",null,{na:true}]
 ],{goal:1.5,lowerBetter:true,gtxt:"goal &lt;1.5%"});
+
+(function(){
+  const rows=[["Average (mean)",2.9],["Median (P50)",1],["75th percentile",4],["90th percentile",7],["95th percentile",12],["99th percentile",23],["Max",129]];
+  const mx=Math.sqrt(129);
+  const win=(Math.sqrt(14)/mx*100).toFixed(1);
+  document.getElementById("tat_dist").innerHTML=rows.map(r=>{
+    const w=(Math.sqrt(r[1])/mx*100).toFixed(1);
+    const d=(r[1]%1===0?r[1]:r[1].toFixed(1))+"d";
+    return `<div class="tatrow"><span class="tlbl">${r[0]}</span><span class="tday">${r[1]%1===0?r[1]:r[1].toFixed(1)}</span><span class="tatbar"><span class="tv" style="width:${w}%">${d}</span><span class="tatwin" style="left:${win}%"></span></span></div>`;
+  }).join("");
+  document.getElementById("tat_dist").insertAdjacentHTML("afterend",
+    `<div class="tatnote"><span class="win"></span> Dashed line marks the 14-day conversion window. The 95th percentile (12d) falls inside it; the 99th (23d) and max (129d) sit in the tail beyond.</div>`);
+})();
 
 (function(){
   function draw(){
