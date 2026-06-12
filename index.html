@@ -64,7 +64,7 @@
   .donutgoal{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:14px;color:var(--muted)}
 
   .qstrip{margin-top:auto;padding-top:16px;border-top:1px solid #EEF1ED}
-  .tatsub{font-size:13px;color:var(--muted);margin:-8px 0 14px;line-height:1.45;max-width:760px}
+  .tatsub{font-size:13px;color:var(--muted);margin:-8px 0 14px;line-height:1.45}
   .tatrow{display:grid;grid-template-columns:190px 64px 1fr;align-items:center;gap:16px;padding:9px 0;border-bottom:1px solid #EEF1ED}
   .tatrow:last-child{border-bottom:none}
   .tatrow .tlbl{font-size:14px;font-weight:500}
@@ -72,7 +72,7 @@
   .tatbar{display:flex;align-items:center;position:relative}
   .tatbar span.tv{height:22px;background:var(--accent);border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding:0 9px;color:#fff;font-size:11.5px;font-weight:700;min-width:38px;white-space:nowrap}
   .tatwin{position:absolute;top:-5px;bottom:-5px;border-left:1.5px dashed var(--muted-2);z-index:2}
-  .tatnote{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45;max-width:760px}
+  .tatnote{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.45}
   .tatnote .win{display:inline-block;width:18px;border-top:1.5px dashed var(--muted-2);vertical-align:middle;margin:0 2px}
   .qstrip .qlab{font-size:11.5px;color:#A8ADA3;font-style:italic;margin-bottom:8px}
   .qstrip .qrow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
@@ -134,7 +134,7 @@
 
   <section>
     <div class="sec-head"><h3>2 · Referral Conversion Rate</h3></div>
-    <div class="grid g2">
+    <div class="grid g2 row">
       <div class="panel"><h4>Blended — 14 Days</h4><div class="chartbox"><div class="donutrow"><div class="donutwrap"><canvas id="conv_donut"></canvas><div class="donutctr"><div class="dn">82.8%</div><div class="dl">converted</div></div></div><div class="donutgoal"><span>Goal 85%</span><span class="bigpill bad">2.2 under</span></div></div><div class="qstrip"><div class="qlab">Recent quarters · illustrative</div><div class="qrow"><span>Q4 '25 <b>&ndash;</b></span><span>Q1 '26 <b>81%</b></span><span>Q2 '26 <b>82.8%</b></span></div></div></div></div>
       <div class="panel"><h4>By SCN <span class="per">Q2 '26 · QTD</span></h4><div class="chartbox" id="conv_scn"></div>
         <div class="note">Illustrative — pending live data.</div></div>
